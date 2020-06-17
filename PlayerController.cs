@@ -2,6 +2,8 @@
 
 public class PlayerController : MonoBehaviour
 {
+    public SpriteRenderer spriteRenderer;
+
     [SerializeField]
     private float runSpeed = 3.5f;
     [SerializeField]
@@ -18,13 +20,12 @@ public class PlayerController : MonoBehaviour
 
     Animator animator;
     Rigidbody2D rb2d;
-    SpriteRenderer spriteRenderer;
     Object lightSphereRef;
 
     private bool isGrounded;
     private bool attack0AnimPlaying;
 
-    void Start()
+    private void Start()
     {
         animator = GetComponent<Animator>();
         rb2d = GetComponent<Rigidbody2D>();
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour
             attack0AnimPlaying = true;
             Invoke("ResetAnim", 0.15f);
             GameObject lightSphere = (GameObject)Instantiate(lightSphereRef);
+            lightSphere.GetComponent<LightSphere>().source = this.gameObject;
             float x = 0.6f;
 
             if (spriteRenderer.flipX)
@@ -51,7 +53,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if (Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground")) ||
             Physics2D.Linecast(transform.position, groundCheckL.position, 1 << LayerMask.NameToLayer("Ground")) ||
@@ -98,7 +100,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void ResetAnim()
+    private void ResetAnim()
     {
         attack0AnimPlaying = false;
     }

@@ -2,13 +2,18 @@
 
 public class LightSphere : MonoBehaviour
 {
+    public GameObject source;
+
+    [SerializeField]
+    AudioSource deathSound;
+
     Rigidbody2D rb2d;
     SpriteRenderer spriteRenderer;
 
     private float timedLife = 0.7f;
     private Vector3 rotate;
 
-    void Start()
+    private void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -21,7 +26,7 @@ public class LightSphere : MonoBehaviour
         transform.Rotate(rotate * Time.deltaTime);
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         float moveSpeed = 5.5f;
         if (spriteRenderer.flipX)
@@ -31,8 +36,31 @@ public class LightSphere : MonoBehaviour
         rb2d.velocity = new Vector2(moveSpeed, 0);
     }
 
-    void DestroySelf()
+    private void DestroySelf()
     {
-        Destroy(gameObject);
+        spriteRenderer.enabled = false;
+        GetComponent<Collider2D>().enabled = false;
+        Destroy(gameObject, deathSound.clip.length);
+    }
+
+    private void DestroySelfWithSound()
+    {
+        deathSound.Play();
+        DestroySelf();
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.CompareTag("Enemy"))
+        {
+            DestroySelfWithSound();
+            Enemy enemy = col.gameObject.GetComponent<Enemy>();
+            enemy.spriteRenderer.material = enemy.matWhite;
+            enemy.health--;
+            if (enemy.health > 0)
+            {
+                enemy.Invoke("ResetMaterial", 0.1f);
+            }
+        }
     }
 }
