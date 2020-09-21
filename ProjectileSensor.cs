@@ -4,7 +4,7 @@ public class ProjectileSensor : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.CompareTag("LightSphere"))
+        if (col.CompareTag("Projectile") && col.gameObject.GetComponent<Projectile>().source.CompareTag("Player"))
         {
             GameObject parent = transform.parent.gameObject;
             GameObject attacker = col.gameObject.GetComponent<LightSphere>().source;
@@ -13,7 +13,7 @@ public class ProjectileSensor : MonoBehaviour
             {
                 offset = -offset;
             }
-            parent.GetComponent<EnemyHarvester>().Dodge(attacker, offset);
+            parent.GetComponent<Harvester>().Dodge(attacker, offset);
         }
     }
 }

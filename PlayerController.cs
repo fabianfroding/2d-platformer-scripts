@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
 
             if (spriteRenderer.flipX)
             {
-                x = -.4f;
+                x = -0.6f;
                 lightSphere.GetComponent<SpriteRenderer>().flipX = true;
             }
             lightSphere.transform.position = new Vector3(transform.position.x + x, transform.position.y + -0.03f, -1);
@@ -74,6 +74,7 @@ public class PlayerController : MonoBehaviour
                 animator.Play("Seer_Run");
             }
             spriteRenderer.flipX = false;
+            GetComponent<Player>().isFacingLeft = false;
         }
         else if (Input.GetKey("a") || Input.GetKey("left"))
         {
@@ -83,6 +84,7 @@ public class PlayerController : MonoBehaviour
                 animator.Play("Seer_Run");
             }
             spriteRenderer.flipX = true;
+            GetComponent<Player>().isFacingLeft = true;
         }
         else
         {
